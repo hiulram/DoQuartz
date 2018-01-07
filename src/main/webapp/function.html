@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Your Quartz</title>
+
+<!-- 按钮 -->
+<link href="strap/bootstrap.min.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="button/css/normalize.css" />
+<link rel="stylesheet" type="text/css" href="button/css/default.css" />
+<link rel='stylesheet prefetch' href='button/css/font-awesome.min.css' />
+<link rel="stylesheet" type="text/css" href="button/css/styles.css" />
+
+
+
+<link href="css/404.css" rel="stylesheet" type="text/css" />
+
+
+<script src="js/jquery-3.2.1.min.js"></script>
+
+<!-- alert2 -->
+<script src="alert2/sweetalert2.min.js"></script>
+<link href="alert2/sweetalert2.min.css" rel="stylesheet" />
+
+
+<script type="text/javascript">
+	$(function() {
+		var h = $(window).height();
+		$('body').height(h);
+		$('.mianBox').height(h);
+		centerWindow(".tipInfo");
+	});
+
+	//2.将盒子方法放入这个方，方便法统一调用
+	function centerWindow(a) {
+		center(a);
+		//自适应窗口
+		$(window).bind('scroll resize',
+				function() {
+					center(a);
+				});
+	}
+
+	//1.居中方法，传入需要剧中的标签
+	function center(a) {
+		var wWidth = $(window).width();
+		var wHeight = $(window).height();
+		var boxWidth = $(a).width();
+		var boxHeight = $(a).height();
+		var scrollTop = $(window).scrollTop();
+		var scrollLeft = $(window).scrollLeft();
+		var top = scrollTop + (wHeight - boxHeight) / 2;
+		var left = scrollLeft + (wWidth - boxWidth) / 2;
+		$(a).css({
+			"top": top,
+			"left": left
+		});
+	}
+	
+</script>
+<script type="text/javascript">
+	//获取所由任务的状态
+	$(function() {
+		//这些按钮默认时 unchecked 状态  所以 只需要将  正在运行的任务 的 checkbox 设置为 checked  即可
+		$.post("../../quartz/getStatusOfJob.do",function(data){
+				if(data.night){
+					$("#night").attr('checked','checked');
+				}
+				if(data.afternoon){
+					$("#afternoon").attr('checked','checked');
+				}
+				//如果自定义任务开启了  则将 添加自定义任务的按钮隐藏 将 自定义开关  打开且  设置为 checked
+				if(data.ownjob){
+					$("#ownJobDiv").show();
+					$("#ownJob").attr('checked','checked');
+					/* 将添加自定义任务的 button  隐藏 */
+					$("#openYourOwnJobButton").hide();
+				}else{
+				}
+		},"json");
+	})
+
+</script>
+</head>
+<body>
+	<!--  --------------------------------------------------------------------------------------- 模态框  -->
+					<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+						aria-labelledby="myModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title" id="myModalLabel">自定义动态定时任务</h4>
+								</div>
+								<!-- 表單區域 -->
+								<div class="modal-body">
+									<form role="form" id="ownForm">
+  										<div class="form-group">
+    										<label for="name">触发时间</label>
+   											 <input type="text" class="form-control" placeholder="0   20   5  *  *  ?  :代表在每天的5：20执行一次" name="ownQuartzTime" />
+   											 <input  type="hidden" name="ownQuartz" value="on"/>
+ 											 </div>
+ 										</form>
+								</div>
+								<!-- 表單區域 -->
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default"
+										data-dismiss="modal">关闭</button>
+									<button type="button" class="btn btn-primary" id="own">提交更改</button>
+								</div>
+							</div>
+							<!-- /.modal-content -->
+						</div>
+						<!-- /.modal -->
+					</div>
+					<!-- 开启或者修改自定义 定时任务 -->
+					<script type="text/javascript">
+						$("#own").click(function() {
+							$.post("../../quartz/startOrUpdateOwnJob.do",$("#ownForm").serialize(),function(data){
+								if(data.success){
+									$("#ownJob").show();
+									swal(
+											  '成功!',
+											  data.info,
+											  'success'
+											)
+									/* 将隐藏的 自定义任务开关开启  并且将其这只为checked状态 */
+									$("#ownJobDiv").show();
+									$("#ownJob").attr('checked','checked');
+									/* 将添加自定义任务的 button  隐藏 */
+									$("#openYourOwnJobButton").hide();
+								}else{
+									swal(
+											  '失败!',
+											  data.info,
+											  'error'
+											)	
+								}											
+							},"json");
+						});
+					</script>
+			<!--  --------------------------------------------------------------------------------------- 模态框  -->
+					
+	<div class="mianBox">
+		<img src="images/yun0.png" alt="" class="yun yun0" /> <img
+			src="images/yun1.png" alt="" class="yun yun1" /> <img
+			src="images/yun2.png" alt="" class="yun yun2" /> <img
+			src="images/bird.png" alt="" class="bird" /> <img
+			src="images/san.png" alt="" class="san" />
+		<div class="tipInfo">
+			<div class="in">
+				<div class="textThis" style="background-color: white;">
+					<section class="model-13">
+					<div class="checkbox">
+						<input type="checkbox" name="night" id="night" /> <label></label>
+					</div>
+					</section>
+					<section class="model-13">
+					<div class="checkbox">
+						<input type="checkbox" name="afternoon" id="afternoon" /> <label></label>
+					</div>
+					</section>
+					
+					<section class="model-13" style="display:none"  id="ownJobDiv">
+					<div class="checkbox">
+						<input type="checkbox" name="ownJob" id="ownJob"  /> <label></label>
+					</div>
+					</section>
+					<section>
+					<button id="toStudent" class="btn btn-success btn-sm">学生管理</button>
+					</section>
+					<section>
+					 <!-- 按钮触发模态框 -->
+					<button class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModal"  id="openYourOwnJobButton">自定义任务</button>
+					
+					</section>
+					<script type="text/javascript"> 
+					/* ----------------------------------------------------------晚间任务的js */
+					$("#night").click(function() {
+						var flag =$("#night").is(':checked');
+						var content=flag==true?"确定要开启该定时任务？":"确定要关闭该定时任务？";
+						var flags=confirm(content);
+						var value=null;
+						if(flags){
+							if(flag){
+								value="on";
+							}else{
+								value="off";
+							}
+							alert(value);
+							$.post("../../quartz/startOrEndNightJob.do","night="+value,function(data){
+									if(data.success){
+										swal(
+												  '成功!',
+												  data.info,
+												  'success'
+												)
+									}else{
+										swal(
+												  '失败!',
+												  data.info,
+												  'error'
+												)	
+									}						
+							},"json");
+					}//flags内
+						
+					});	
+					/* ---------------------------------------------------------------------下午任务的js */
+					$("#afternoon").click(function() {
+						var flag =$("#afternoon").is(':checked');
+						var content=flag==true?"确定要开启该定时任务？":"确定要关闭该定时任务？";
+						var flags=confirm(content);
+						var value=null;
+						if(flags){
+							if(flag){
+								value="on";
+							}else{
+								value="off";
+							}
+							alert(value);
+							$.post("../../quartz/startOrEndNoonJob.do","afternoon="+value,function(data){
+									if(data.success){
+										swal(
+												  '成功!',
+												  data.info,
+												  'success'
+												)
+									}else{
+										swal(
+												  '失败!',
+												  data.info,
+												  'error'
+												)	
+									}						
+							},"json");
+					}//flags内
+						
+					});	
+					$("#toStudent").click(function() {
+						location.href="../../quartz/getStudents.do";
+					});
+					
+					/* -----------------------------------------------------------------自定义任务开关的  js */
+						$("#ownJob").click(function() {
+						var flag =$("#ownJob").is(':checked');
+						var content=flag==true?"确定要开启该定时任务？":"确定要关闭该定时任务？";
+						var flags=confirm(content);
+						var value=null;
+						if(flags){
+							if(flag){
+								value="on";
+							}else{
+								value="off";
+							}
+							$.post("../../quartz/startOrUpdateOwnJob.do","ownQuartz="+value,function(data){
+									if(data.success){
+										/* 判断 value 是否为 off 为off 的话说明  是在关闭任务  此时可以打开 按钮   提供修改  这个定时任务时间的机会 */
+										if(value=="off"){
+											$("#openYourOwnJobButton").show();
+										}else{
+											$("#openYourOwnJobButton").hide();
+										}
+										swal(
+												  '成功!',
+												  data.info,
+												  'success'
+												)
+												
+									}else{
+										swal(
+												  '失败!',
+												  data.info,
+												  'error'
+												)	
+									}						
+							},"json");
+					}//flags内
+						
+					});	
+					
+				</script>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script src="strap/bootstrap.min.js"></script>
+</body>
+	
+</html>
+

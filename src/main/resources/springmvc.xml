@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+        <!-- 开启组件扫描 -->
+          <context:component-scan base-package="com.lyd.web"></context:component-scan>
+          
+            <!-- 添加映射器处理器 和适配器处理器 -->
+        <mvc:annotation-driven></mvc:annotation-driven>
+        
+        <!-- 配置文件上传解析器,说明：
+         1.文件上传解析器的id属性值，必须是文件上传解析器接口的名称首字母小写（MultipartResolver）-->
+        <bean id="multipartResolver" 
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        	<!-- Provides "maxUploadSize", "maxInMemorySize" and 
+        	"defaultEncoding" settings as
+ 			 bean properties -->
+ 			 
+ 			 <!-- maxUploadSize属性：配置文件上传的大小限制，以字节为单位：
+ 			 10M=10*1024*1024 -->
+ 			 <property name="maxUploadSize" value="10485760"></property>
+ 			 
+ 			 <!-- maxInMemorySize属性：配置缓冲区大小，以字节为单位：
+ 			 4k：4*1024 -->
+ 			 <property name="maxInMemorySize" value="4096"></property>
+ 			 
+ 			 <!-- defaultEncoding属性：配置字符集编码 -->
+ 			 <property name="defaultEncoding" value="UTF-8"></property>
+ 
+        </bean>
+        
+</beans>
